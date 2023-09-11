@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>round2</title>
+	<style type="text/css">
+	
+		#gc{
+			font-family:"Permanent Marker",cursive;
+			text-align:center;
+		}
+		#cc{
+			display:grid;
+			grid-template-columns: repeat(3,auto);
+			width:225px;
+			margin:auto;
+		}	
+		.cell{
+			width:75px;
+			height:75px;
+			border:1px solid green;
+			box-shadow:0 0 0 1px;
+			line-height:75px;
+			font-size:50px;
+			cursor:pointer;
+		}
+		.a{
+			background-color:aliceblue;
+			height:600px;
+			
+		}
+		button{
+			background-color:violet;
+			height:30px;
+			width:100px;
+			border:2px solid black;
+			border-radius: 3px;
+		}
+	</style>
+</head>
+<body>
+	<div class="a">
+	<div id="gc">
+		<h2> Tic Tac Toe </h2>
+		<div id="cc">
+			<div cellIndex="0" class="cell"></div>
+			<div cellIndex="1" class="cell"></div>
+			<div cellIndex="2" class="cell"></div>
+			<div cellIndex="3" class="cell"></div>
+			<div cellIndex="4" class="cell"></div>
+			<div cellIndex="5" class="cell"></div>
+			<div cellIndex="6" class="cell"></div>
+			<div cellIndex="7" class="cell"></div>
+			<div cellIndex="8" class="cell"></div>
+
+		</div>
+		<h2 id="st"></h2>
+		<button id="res">Restart</button>
+	</div>
+	<script type="text/javascript">
+		const cells=document.querySelectorAll(".cell");
+		const st=document.querySelector("#st");
+		const res=document.querySelector("#res");
+		const wc=[
+			[0,1,2],
+			[3,4,5],
+			[6,7,8],
+			[0,3,6],
+			[1,4,7],
+			[2,5,8],
+			[0,4,8],
+			[2,4,6]
+		];
+		let opt=["","","","","","","","",""];
+		let crt="1";
+		let rg=false;
+
+		initgame();
+
+		function initgame(){
+			cells.forEach(cell => cell.addEventListener("click",cellClicked))
+			res.addEventListener("click",restartGame);
+			st.textContent=`${crt}'s turn`;
+			rg=true;
+
+		}
+		function cellClicked(){
+			const cellIndex=this.getAttribute("cellIndex");
+
+			if(opt[cellIndex]!="" || !rg){
+				return;
+			}
+
+			updateCell(this,cellIndex);
+			checkWinner();
+
+		}
+		function updateCell(cell,index){
+			opt[index]=crt;
+			cell.textContent=crt;
+
+		}
+		function changePlayer(){
+			crt=(crt=="1")?"0":"1";
+			st.textContent=`${crt}'s turn`;
+
+
+		}
+		function checkWinner(){
+			let roundWon=false;
+
+			for(let i=0;i<wc.length;i++){
+				const condition=wc[i];
+				const cellA=opt[condition[0]];
+				const cellB=opt[condition[1]];
+				const cellC=opt[condition[2]];
+
+				if(cellA == "" || cellB == "" || cellC == ""){
+					continue;
+				}
+				if(cellA==cellB && cellB==cellC){
+					roundWon=true;
+					break
+				}
+			}
+			if(roundWon){
+				st.textContent=`${crt} wins`
+				rg=false;
+			}
+			else if(!opt.includes("")){
+				st.textContent=`Draw`;
+				rg=false;
+			}
+			else{
+				changePlayer();
+			}
+
+		}
+		function restartGame(){
+			crt="1";
+			opt=["","","","","","","","","",];
+			st.textContent=`${crt}'s turn`;
+			cells.forEach(cell=> cell.textContent="");
+			rg=true;
+		}
+	</script>
+</div>
+</body>
+</html>
